@@ -16,7 +16,7 @@ ftps = data.ftp_path.to_list()
 
 # Turn ftps into list of tuples with assembly accession and ftp path
 
-urls = [ftp+"_transalted_cds.faa.gz" for ftp in ftps]
+urls = [ftp+"/"+ftp.split("/")[-1]+"_translated_cds.faa.gz" for ftp in ftps]
 
 
 # Based on URLs, download the files in the "./CDS/" folder and unzip them in the same folder at the same time
@@ -26,6 +26,8 @@ import urllib.request
 import gzip
 import shutil
 import time
+
+i = 0
 
 for url in urls:
     try:
@@ -38,6 +40,9 @@ for url in urls:
                 shutil.copyfileobj(f_in, f_out)
         os.remove("./CDS/"+file_name)
         time.sleep(2)
+        i += 1
+        if i > 5:
+            break
     except:
         print("Error with "+url)
         pass
